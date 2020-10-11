@@ -1,0 +1,152 @@
+Programming Assignment #1: Writing Functions in Haskell (100 points)
+Update (Nov. 8th): When writing the functions, do not modify their declarations! For instance, do not introduce new input arguments to the functions (e.g., replacing curry f = ... with curry f (x, y) = ...). Implementations which modify the function declarations will not be accepted as a valid solution.
+
+Welcome to the first programming assignment for Programming Language Structures (CSI3103) @ Yonsei University for Fall 2019!
+
+As the first assignment, you will write various functions using Haskell, a pure functional programming language. Functions are the most important concept in functional programming as functional programming languages treat everything as a function. Thus, becoming comfortable with functions is the key to functional programming, and that is exactly why this programming assignment demands you to write various functions implementing different functionalities with different data types.
+
+The goal of this assignment to implement various functions by replacing undefined keyword with proper expressions. For example, suppose the assignment provided you with addTwoInts x y = undefined. Then, you should replace the undefined keyword with x + y so that function addTwoInts correctly evaluates the sum of two integers x and y.
+
+After replacing undefined keyword with a proper expression, you can test your implementation by pressing a control key and an enter key of your keyboard at the same time (i.e., Ctrl+Enter); pressing the keys makes GHCi load your source code. When GHCi successfully loads your source code, "Load Complete!" will appear; however, when there is an error in your source code, it will print error messages instead. When error messages appear, fix your source code according to the error messages, and then reload your source code by pressing Ctrl+Enter. Note that GHCi sometimes do not response in a prompt manner. In such a case, simply re-enter this assignment page.
+
+When your source code is successfully loaded (i.e., you saw the "Load Complete!" message), you can test your implementation by invoking your functions through GHCi interface. For example, after loading the source code, typing addTwoInts 3 5 in GHCi interface followed by pressing an enter key will show 8, the value of 3 + 5, on the interface. As another example, typing :t addTwoInts will display Int -> Int -> Int, the type of function addTwoInts. In this way, you can test whether your implementation is correct by invoking your functions with various input values. Note that you don't have to replace all the occurences of undefined keyword with proper expressions to load your source code; leave an unimplemented function as is and just test the functions you implemented. Also note that the examples in the problems do not ensure your implementation is correct. Your implementation may fail with other valid input values, so please check the correctness of your implementation with different input values as well.
+
+After completing the assignment, please download your source file by pressing the "Download file" located at the bottom-left corner of the source code editor and upload the source file to YSCEC by 23:59 on Nov. 14th (Thu). We will not accept any late submissions, so please upload the source file even though you have not fully finished the assignment to get partial scores.
+
+Without further ado, let's dive into the assignment. For this assignment, please implement the functions below.
+
+1. Functions on integers
+1.1. sum_ for adding integers 1 to n (inclusive) [4 points]
+sum_ :: Int -> Int
+sum_ n returns 1 + 2 + 3 + ... + n.
+n > 0.
+e.g., sum 10 = 55
+
+1.2. fac for factorials [4 points]
+fac :: Int -> Int
+fac n returns 1 * 2 * 3 * ... * n.
+Hint: Change the code for sum.
+
+1.3. fib for Fibonacci numbers [3 points]
+fib :: Int -> Int
+fib n returns fib (n - 1) + fib (n - 2) when n >= 2.
+fib n returns 1 if n = 0 or n = 1.
+n >= 0.
+
+1.4. gcd_ for finding the greatest common divisor [4 points]
+gcd_ :: Int -> Int -> Int
+gcd_ m n returns the greatest common divisor of m and n using Euclid's algorithm.
+m >= 0, n >= 0, m + n > 0.
+e.g., gcd 15 20 = gcd 5 15 = gcd 0 5 = 5.
+
+1.5. max_ for finding the largest integer in a list of integers [4 points]
+max_ :: [Int] -> Int
+max_ l returns the largest integer in the list l. If an empty list is given, return 0.
+e.g., max [5,3,6,7,4] returns 7.
+
+2. Functions on binary trees
+For the functions in this category, we will use the following inductive definition to define a binary tree:
+
+Tree t ::= Leaf n | Node (t, n, t)
+
+where n is the value associated with a node or a leaf. In Haskell, the inductive definition is expressed as:
+
+data Tree t = Leaf t | Node (Tree t, t, Tree t)
+
+where Tree t is the data type for a binary tree whose values are of type t. For example, a binary tree with integer values have type Tree Int.
+
+2.1. sum_tree for computing the sum of integers stored in a binary tree [4 points]
+sum_tree :: Tree Int -> Int
+sum_tree t returns the sum of integers stored in the tree t.
+e.g., sum_tree (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns 17.
+
+2.2. depth for computing the depth of tree [4 points]
+depth :: Tree a -> Int
+depth t returns the length of the longest path from the root to leaf.
+e.g., depth (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns 2.
+
+2.3. bin_search for searching an element in a binary search tree [4 points]
+bin_search :: Tree Int -> Int -> Bool
+bin_search t x returns True if the number x is found in the binary search tree t; otherwise, it returns False.
+t is a binary search tree: all numbers in a left subtree are smaller than the number of the root, and all numbers in a right subtree are greater than the number of the root. We further assume that all numbers are distinct.
+e.g., bin_search (Node (Node (Leaf 1, 2, Leaf 3), 4, Leaf 7)) 2 returns True, bin_search (Node (Node (Leaf 1, 2, Leaf 3), 4, Leaf 7)) 5 returns False.
+
+2.4. preorder for a preorder traversal of binary trees [4 points]
+preorder :: Tree a -> [a]
+preorder t returns a list of elements produced by a preorder traversal of the tree t.
+e.g., preorder (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns [7,3,1,2,4].
+
+3. Functions on lists of integers
+3.1. list_add for adding each pair of integers from two lists [4 points]
+list_add :: [Int] -> [Int] -> [Int]
+list_add [a,b,c,...] [x,y,z,...] returns [a+x,b+y,c+z,...]. If one list is longer than the other, the remaining list of elements is appended to the result.
+e.g., list_add [1,2] [3,4,5] returns [4,6,5].
+
+3.2. insert for inserting an element into a sorted list [4 points]
+insert :: Int -> [Int] -> [Int]
+insert m l inserts m into a sorted list l. The resultant list is also sorted.
+The list l is sorted in ascending order.
+e.g., insert 3 [1,2,4,5] returns [1,2,3,4,5].
+
+3.3. insort for insertion sort [4 points]
+insort :: [Int] -> [Int]
+insort l returns a sorted list of elements in l.
+insort [3,7,5,1,2] returns [1,2,3,5,7].
+Tip: Use insert above.
+
+4. Higher-order functions
+4.1. compose for functional composition [4 points]
+compose :: (a -> b) -> (b -> c) -> (a -> c)
+compose f g returns g ? f. That is, (compose f g) x is equal to g (f x).
+
+4.2. curry_ for currying [4 points]
+curry_ :: ((a, b) -> c) -> (a -> b -> c)
+We have a choice of how to write functions of two or more arguments. Functions are in curried form if they take arguments one at a time. Uncurried functions take arguments as a pair. curry_ f transforms an uncurried function f into a curried version.
+e.g., multiply x y = x * y is a curried function, whereas multiplyUC (x, y) = x * y is an uncurried function. If we apply curry_ to multiplyUC, we get multiply.
+
+4.3. uncurry_ for uncurrying [4 points]
+uncurry_ :: (a -> b -> c) -> ((a, b) -> c)
+See 4.2. uncurry_ f transforms a curried function f into an uncurried version.
+e.g., If we apply uncurry_ to multiply, we get multiplyUC.
+
+4.4. multifun for applying a function n times [4 points]
+multifun :: (a -> a) -> Int -> (a -> a)
+(multifun f n) x returns the result of f (f (f (... (f x) ...))) where f is invoked n times for x.
+n >= 1.
+e.g., (multifun (\x -> x + 1) 3) 1 returns 4. (multifun (\x -> x * x) 3) 2 returns 256.
+
+5. Functions on lists and tuples
+5.1. ltake for taking the list of the first i elements of l [4 points]
+ltake :: [a] -> Int -> [a]
+ltake l n returns the list of the first n elements of l. If n is larger than the length of l, then return l.
+e.g., ltake [3,7,5,1,2] 3 returns [3,7,5]. ltake [1..] 3 returns [1,2,3]. ltake [3,7,5,1,2] 7 returns [3,7,5,1,2]. ltake ["s","t","r","i","k","e","r","z" ] 5 returns ["s","t","r","i","k"].
+
+5.2. lall for examining a list [4 points]
+lall :: (a -> Bool) -> [a] -> Bool
+lall f l returns True if for every element x of l, f x evaluates to True; otherwise it returns False. In other words, lall f l tests if all elements in l satisfy the predicate f.
+e.g., lall (\x -> x > 0) [1,2,3] evaluates to True. lall (\x -> x > 0) [-1,-2,3] evaluates to False.
+
+5.3. lmap for converting a list into another list [5 points]
+lmap :: (a -> b) -> [a] -> [b]
+lmap f l applies f to each element of l from left to right, returning the list of results.
+e.g., lmap (\x -> x + 1) [1,2,3] returns [2,3,4].
+
+5.4. lrev for reversing a list [5 points]
+lrev :: [a] -> [a]
+lrev l reverses l.
+e.g., lrev [1,2,3,4] returns [4,3,2,1].
+
+5.5. lzip for pairing corresponding members of two lists [5 points]
+lzip :: [a] -> [b] -> [(a, b)]
+lzip [x1, x2, ..., xn] [y1, y2, ..., yn] = [(x1, y1), (x2, y2), ... (xn, yn)]. If two lists differ in length, ignore surplus elements.
+e.g., lzip ["Rooney","Park","Scholes","C.Ronaldo"] [8,13,18,7,10,12] returns [("Rooney",8),("Park",13),("Scholes",18),("C.Ronaldo",7)].
+
+5.6. split for splitting a list into two lists [7 points]
+split :: [a] -> ([a], [a])
+split l returns a pair of two lists. The first list consists of elements in odd positions, and the second consists of elements in even positions in a given list, respectively. For an empty list, split returns ([],[]). For a singleton list [x], split returns ([x],[]).
+e.g., split [1,3,5,7,9,11] returns ([1,5,9],[3,7,11]).
+
+5.7. cartprod for the Cartesian product of two sets [7 points]
+cartprod :: [a] -> [b] -> [(a, b)]
+cartprod S T returns the set of all pairs (x,y) where x and y belong to S and T, respectively. The order of elements is important: cartprod [x1,x2,...,xn] [y1,y2,...,yn] = [(x1,y1),...,(x1,yn),(x2,y1),...,(x2,yn),...,(xn,yn)].
+e.g., cartprod [1,2] [3,4,5] returns [(1,3),(1,4),(1,5),(2,3),(2,4),(2,5)].
