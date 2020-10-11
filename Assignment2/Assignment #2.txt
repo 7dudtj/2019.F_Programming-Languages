@@ -1,0 +1,184 @@
+Programming Assignment #2: Writing More Functions in Haskell (100 Points)
+Welcome to the second programming assignment of CSI3103 @ Yonsei University for Fall 2019!
+
+In the previous assignment, you were asked to write some basic Haskell functions to help you become familiar with functional programming. As a follow-up, this assignment will go a step further by asking you to write tail-recursive functions, sorting algorithms, and a dynamically-allocatable memory region called heap.
+
+Similar to the previous assignment, please complete the assignment and submit your source code through YSCEC. We give you one week to complete this assignment, so the submission deadline is Nov. 24th (Sun) at 23:59. Note that no late submissions will be accepted.
+
+Questions
+Q: How should the return values of functions heapDereference and heapUpdate look like?
+A : When a valid location is given and the value stored at the location is v, function heapDereference should return Just v. For function heapUpdate, return Just updatedHeap when a valid location is given. When an invalid location is given for both heapDereference and heapUpdate, return Nothing. FYI, Maybe a is defined as either Just a or Nothing for the type variable a.
+
+Q: Are there examples for the heap-related functions?
+A: Sure. Please refer to the code below for how the heap-related functions can be used.
+
+let
+  heap0 = heapEmpty ()                     -- obtain a fresh heap whose elements are of type Int
+  (heap1, loc3) = heapAllocate heap0 3     -- allocate a fresh heap cell and store 3 to the heap cell
+  (heap2, loc5) = heapAllocate heap1 5     -- allocate a fresh heap cell and store 5 to the heap cell
+  val3heap2 = heapDereference heap2 loc3   -- val3heap2 = Just 3  (access to heap2 using loc3)
+  val5heap2 = heapDereference heap2 loc5   -- val5heap2 = Just 5  (access to heap2 using loc5)
+  val5heap1 = heapDereference heap1 loc5   -- val5heap1 = Nothing (access to heap1 using loc5)
+in
+  ...
+
+Q: Should I sort a given list in an ascending order for Part 3 (i.e., quicksort, mergesort)?
+A: Yes, please sort the given list in an ascending order (e.g., [3,1,2,3] into [1,2,3,3]).
+
+Notices
+[Nov. 20th] The deadline for this programming assignment has been extended to Nov. 24th (Sun) at 23:59. Please refer to the corresponding YSCEC announcement post for details.
+
+[Nov. 19th] When implementing function heapEmpty, please use the following definition:
+
+heapEmpty :: () -> Heap a
+heapEmpty () = undefined
+
+[Nov. 16th] I received a few notes from the students that repl.it does not properly propagate the updates to the source code template. In case your source code doesn't have the below function declarations, please replace the corresponding (outdated) function declarations with the ones shown below:
+
+fib :: Int -> Int
+fib n =
+  let
+    fibTR n _ _ = undefined
+  in
+    fibTR n 0 1
+
+inorder :: Tree a -> [a]
+inorder t =
+  let
+    inorderTR t _ _ = undefined
+  in
+    inorderTR t [] []
+
+postorder :: Tree a -> [a]
+postorder t =
+  let
+    postorderTR t _ _ = undefined
+  in
+    postorderTR t [] []
+
+preorder :: Tree a -> [a]
+preorder t =
+  let
+    preorderTR t _ _ = undefined
+  in
+    preorderTR t [] []
+
+union :: (Eq a) => [a] -> [a] -> [a]
+union s t = undefined
+
+quicksort :: (Ord a) => [a] -> [a]
+quicksort l = undefined
+
+mergesort :: (Ord a) => [a] -> [a]
+mergesort l = undefined
+
+[Nov. 16th] The function declaration for inorderTR, postorderTR, and preorderTR have been modified. Please change your implementations with reprect to the updated function declaration.
+
+[Nov. 15th] The function declaration for fibTR has been updated from "fibTR n _" to "fibTR n _ _". Please use the new declaration instead of the previous one. In addition, invoke fibTR via "fibTR n 0 1".
+
+[Nov. 15th] The type signatures for functions union, quicksort, and mergesort have been updated. Please modify your implementation with respect to the updated type signatures.
+
+[Nov. 15th] You are allowed to change only the unnamed variable '_' and keyword 'undefined' in each function. Do not change any other parts of the functions. For instance, when writing fact n, you may rewrite "factTR n _ = undefined" as "factTR n l = ~~~" but leave "factTR n 1" as is.
+
+[Nov. 15th] When implementing Part 4, you need to define the types Loc and Heap t before writing heap-related functions. For instance, if you wish to define type Loc as an integer, replace "type Loc = ()" with "type Loc = Int".
+
+Part 1: Recursive Functions
+1.1. lconcat for concatenating a list of lists [5 points]
+lconcat :: [[a]] -> [a]
+lconcat l concatenates all elements of l.
+e.g., lconcat [[1,2,3],[6,5,4],[9]] returns [1,2,3,6,5,4,9].
+
+1.2. lfoldl for left folding a list [5 points]
+lfoldl ::= ((a, b) -> b) -> b -> [a] -> b
+lfoldl f e l takes e and the first item of l and applies f to them, then feeds the function with this result and the second argument and so on. That is, lfoldl f e [x1,x2,...,xn] returns f(xn, ..., f(x2, f(x1, e))...) or e if the list is empty.
+
+Part 2: Tail-Recursive Functions
+2.1. fact for factorials [5 points]
+fact ::= Int -> Int
+fact n returns 1*2*3*...*n.
+n >= 0.
+
+2.2. power for powers [5 points]
+power ::= Int -> Int -> Int
+power x n returns x^n. x^0 is computed as 1.
+n >= 0.
+
+2.3. fib for Fibonacci numbers [5 points]
+fib ::= Int -> Int
+fib n returns fib (n - 1) + fib (n - 2) when n >= 2.
+fib n returns 1 if n == 0 or n == 1.
+n >= 0.
+
+2.4. lfilter for filtering a list [5 points]
+lfilter ::= (a -> Bool) -> [a] -> [a]
+lfilter p l returns all elements of l which satisfies the predicate p.
+lfilter (\x -> x > 2) [0,1,2,3,4,5] returns [3,4,5].
+
+2.5. ltabulate [5 points]
+ltabulate ::= Int -> (Int -> a) -> [a]
+ltabulate n f applies f to each element of a list [0,1,...,n-1]
+ltabulate 4 (\x -> x * x) returns [0,1,4,9].
+n >= 0.
+
+2.6. union for union of two sets [5 points]
+union ::= (Eq a) => [a] -> [a] -> [a]
+union S T returns a set which includes all elements of S and T without duplication of any element. Note that all list elements have an equality type as indicated by equality type variable a. The order of elements in the return value does not matter.
+Each input set consists of distinct elements.
+e.g., union [1,2,3] [2,4,6] returns [3,1,2,4,6].
+Note: You can implement union without introducing an auxiliary tail recursive function. That is, union itself can be implemented as a tail recursive function.
+
+For problems 2.7, 2.8, and 2.9, we will use the following inductive definition for a binary tree:
+
+Tree t ::= Leaf n | Node (t, n, t)
+
+where n denotes the type of the node's values. In Haskell, the inductive definition is expressed as:
+
+data Tree t = Leaf t | Node (Tree t, t, Tree t)
+
+where t denotes the type of the nodes' values.
+
+2.7. inorder for an inorder traversal of binary trees [8 points]
+inorder ::= Tree a -> [a]
+inorder t returns a list of elements produced by an inorder traversal of the tree t.
+e.g., inorder (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns [1,3,2,7,4].
+
+2.8. postorder for a postorder traversal of binary trees [8 points]
+postorder ::= Tree a -> [a]
+postorder t returns a list of elements produced by a postorder traversal of the tree t.
+e.g., postorder (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns [1,2,3,4,7].
+
+2.9. preorder for a preorder traversal of binary trees [8 points]
+preorder ::= Tree a -> [a]
+preorder t returns a list of elements produced by a preorder traversal of the tree t.
+e.g., preorder (Node (Node (Leaf 1, 3, Leaf 2), 7, Leaf 4)) returns [7,3,1,2,4].
+
+Part 3: Sorting
+3.1. quicksort for quick sorting [8 points]
+quicksort ::= (Ord a) => [a] -> [a]
+quicksort l implements quick sorting by selecting the first element of l as a pivot. To compare elements of type a, use the primitive operators <, >, and ==.
+e.g., quicksort [3,7,5,1,2] selects 3 as a pivot to obtain two sublists [1,2] and [5,7] to be sorted independently.
+
+3.2. mergesort for merge sorting [8 points]
+mergesort ::= (Ord a) => [a] -> [a]
+mergesort l divides l into two sublists, sorts each sublist, and then merges the two sorted sublists. If the length of l is even, then the two sublists are of equal length. If not, one sublist has one more element than the other. To compare elements of type a, use the primitive operators <, >, and ==.
+
+Part 4: Heap [20 points]
+In this section, we will implement a heap, a dynamically-allocatable memory region, using Haskell. Please define and implement the following data types and functions, respectively.
+
+4.1. Loc
+Loc is the internal representation of location which is similar to the pointer of C programming language.
+
+4.2. Heap t
+Heap t is a heap for the type t.
+
+4.3. heapEmpty
+heapEmpty () returns an empty heap.
+
+4.4. heapAllocate
+heapAllocate h v allocates the given value v to a fresh heap cell, and returns the tuple (h', l) of the updated heap h' and the location l of this cell.
+
+4.5. heapDereference
+heapDeference h l fetches the value v stored in the heap cell at location l. If the value v does not exist, the function should return Nothing.
+
+4.6. heapUpdate
+heapUpdate h l v updates the heap cell at location l with the given value v and returns the updated heap h'. 
